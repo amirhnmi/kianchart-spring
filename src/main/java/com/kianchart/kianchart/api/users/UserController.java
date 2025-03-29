@@ -4,10 +4,7 @@ import com.kianchart.kianchart.database.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,13 +21,15 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/list", method = RequestMethod.GET)
-    public List<User> getAllUsers() {
-        return userService.getAllUser();
+    public ResponseEntity<List<UserDTO.Response>> getAllUsers() {
+        List<UserDTO.Response> data = userService.getAllUser();
+        return new ResponseEntity<>(data,HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/user/show", method = RequestMethod.GET)
-    public Optional<User> getOneUser(Long id) {
-        return userService.getUserById(id);
+    @RequestMapping(value = "/user/{id}/show", method = RequestMethod.GET)
+    public ResponseEntity<UserDTO.Response> getOneUser(@PathVariable Long id) {
+        UserDTO.Response user = userService.getUserById(id);
+        return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
     @RequestMapping(value = "/user/create", method = RequestMethod.POST)
@@ -39,13 +38,15 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @RequestMapping(value = "/user/update", method = RequestMethod.PUT)
-    public User updateUser(Long id, User user) {
-        return userService.updateUser(id, user);
+    @RequestMapping(value = "/user/{id}/update", method = RequestMethod.PUT)
+    public ResponseEntity<UserDTO.Response> updateUser(@PathVariable Long id, @RequestBody  UserDTO.UpdateRequest user) {
+        UserDTO.Response response = userService.updateUser(id, user);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @RequestMapping(value = "/user/delete", method = RequestMethod.DELETE)
-    public void deleteUser(Long id) {
+    @RequestMapping(value = "/user/{id}/delete", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+        return new ResponseEntity<>("data successfully deleted.",HttpStatus.OK);
     }
 }

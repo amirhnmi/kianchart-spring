@@ -1,15 +1,35 @@
 package com.kianchart.kianchart.database.repository;
 
 import com.kianchart.kianchart.database.entity.User;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    @Query("SELECT u FROM User u WHERE u.isActive=true AND u.isDelete=false")
+    List<User> findAllUsers();
+
+    @Query("SELECT u FROM User u WHERE u.id=:id AND u.isActive=true AND u.isDelete=false")
+    User findOneUser(@Param("id") Long id);
+
     Boolean existsByEmail(String email);
 
     Boolean existsByUsername(String username);
+
+    @Query("SELECT COUNT(u) > 0 FROM User u WHERE u.id=:id AND u.isDelete=false AND u.isActive=true")
+    boolean existsById(@Param("id") Long id);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.isDelete=true, u.deletedAt=CURRENT TIMESTAMP WHERE u.id=:id")
+    void deleteUser(@Param("id") Long id);
 }
 
