@@ -1,4 +1,4 @@
-package com.kianchart.kianchart.database.entity;
+package com.kianchart.kianchart.database.entity.users;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -36,6 +37,9 @@ public class User {
     private String gender;
 
     private UUID uuid;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<UserRole> userRole;
 
     @Column(name = "is_active",nullable = false)
     private Boolean isActive;

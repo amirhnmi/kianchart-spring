@@ -3,8 +3,9 @@ package com.kianchart.kianchart.api.users;
 import com.kianchart.kianchart.core.exception.DuplicationException;
 import com.kianchart.kianchart.core.exception.ValidationException;
 import com.kianchart.kianchart.core.validation.Validation;
-import com.kianchart.kianchart.database.entity.User;
-import com.kianchart.kianchart.database.repository.UserRepository;
+import com.kianchart.kianchart.database.entity.users.User;
+import com.kianchart.kianchart.database.entity.users.UserRole;
+import com.kianchart.kianchart.database.repository.users.UserRepository;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -118,6 +119,7 @@ public class UserDTO {
         private LocalDate birthOfDate;
         private String gender;
         private Boolean isActive;
+        private UserRole userRole;
 
         //      mapping Entity to DTO
         public static Response toDto(User user) {

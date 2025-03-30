@@ -1,6 +1,6 @@
-package com.kianchart.kianchart.database.repository;
+package com.kianchart.kianchart.database.repository.users;
 
-import com.kianchart.kianchart.database.entity.User;
+import com.kianchart.kianchart.database.entity.users.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,10 +20,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.id=:id AND u.isActive=true AND u.isDelete=false")
     User findOneUser(@Param("id") Long id);
 
-    Boolean existsByEmail(String email);
-
-    Boolean existsByUsername(String username);
-
     @Query("SELECT COUNT(u) > 0 FROM User u WHERE u.id=:id AND u.isDelete=false AND u.isActive=true")
     boolean existsById(@Param("id") Long id);
 
@@ -31,5 +27,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE User u SET u.isDelete=true, u.deletedAt=CURRENT TIMESTAMP WHERE u.id=:id")
     void deleteUser(@Param("id") Long id);
+
+    Boolean existsByEmail(String email);
+
+    Boolean existsByUsername(String username);
 }
 

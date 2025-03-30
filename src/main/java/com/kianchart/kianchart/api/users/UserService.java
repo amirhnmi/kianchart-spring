@@ -1,14 +1,13 @@
 package com.kianchart.kianchart.api.users;
 
 import com.kianchart.kianchart.core.exception.NotFoundException;
-import com.kianchart.kianchart.database.entity.User;
-import com.kianchart.kianchart.database.repository.UserRepository;
+import com.kianchart.kianchart.database.entity.users.User;
+import com.kianchart.kianchart.database.repository.users.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
