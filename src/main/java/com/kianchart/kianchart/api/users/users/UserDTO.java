@@ -1,4 +1,4 @@
-package com.kianchart.kianchart.api.users;
+package com.kianchart.kianchart.api.users.users;
 
 import com.kianchart.kianchart.core.exception.DuplicationException;
 import com.kianchart.kianchart.core.exception.ValidationException;
@@ -6,6 +6,9 @@ import com.kianchart.kianchart.core.validation.Validation;
 import com.kianchart.kianchart.database.entity.users.User;
 import com.kianchart.kianchart.database.entity.users.UserRole;
 import com.kianchart.kianchart.database.repository.users.UserRepository;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,12 +24,27 @@ public class UserDTO {
     @Setter
     public static class CreateRequest {
 
+        @NotBlank(message = "username is required")
+        @Size(min = 2, max = 128, message = "username must be between 2 and 128")
         private String username;
+
+        @NotBlank(message = "email is required")
         private String email;
+
+        @NotBlank(message = "password is required")
         private String password;
+
+        @NotBlank(message = "fullname is required")
+        @Size(min = 2, max = 128, message = "fullname must be between 2 and 128")
         private String fullname;
+
+        @NotNull(message = "birthOfDate is required")
         private LocalDate birthOfDate;
+
+        @NotBlank(message = "gender is required")
         private String gender;
+
+        @NotNull(message = "isActive is required")
         private Boolean isActive;
 
         public void validate(UserRepository userRepository) {
@@ -51,7 +69,7 @@ public class UserDTO {
         }
 
         // mapping DTO to Entity
-        public User toEntity() {
+        public User mapToEntity() {
             User user = new User();
             user.setUsername(this.username);
             user.setEmail(this.email);
@@ -67,10 +85,14 @@ public class UserDTO {
     @Getter @Setter
     public static class UpdateRequest {
 
+        @Size(min = 2, max = 128, message = "username must be between 2 and 128")
         private String username;
         private String email;
         private String password;
+
+        @Size(min = 2, max = 128, message = "fullname must be between 2 and 128")
         private String fullname;
+
         private LocalDate birthOfDate;
         private String gender;
         private Boolean isActive;
@@ -97,7 +119,7 @@ public class UserDTO {
         }
 
         // mapping DTO to Entity
-        public void updateEntity(User user) {
+        public void mapToEntityForUpdate(User user) {
             if (this.username != null) user.setUsername(this.username);
             if (this.email != null) user.setEmail(this.email);
             if (this.password != null) user.setPassword(this.password);
@@ -122,7 +144,7 @@ public class UserDTO {
         private UserRole userRole;
 
         //      mapping Entity to DTO
-        public static Response toDto(User user) {
+        public static Response mapToDto(User user) {
             Response dto = new Response();
             dto.setId(user.getId());
             dto.setEmail(user.getEmail());
@@ -134,8 +156,8 @@ public class UserDTO {
             return dto;
         }
 
-        public static List<Response> toDtoList(List<User> users){
-            return users.stream().map(Response::toDto).collect(Collectors.toList());
+        public static List<Response> mapToDtoList(List<User> users, int skip, int limit) {
+            return users.stream().skip(skip).limit(limit).map(Response::mapToDto).collect(Collectors.toList());
         }
     }
 }

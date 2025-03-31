@@ -14,8 +14,14 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query("SELECT u FROM User u WHERE u.isActive=true AND u.isDelete=false")
-    List<User> findAllUsers();
+    @Query("SELECT u FROM User u WHERE u.isActive=true AND u.isDelete=false ORDER BY u.id asc")
+    List<User> findAllUsersASC();
+
+    @Query("SELECT u FROM User u WHERE u.isActive=true AND u.isDelete=false ORDER BY u.id desc")
+    List<User> findAllUsersDESC();
+
+    @Query("SELECT COUNT(u) FROM User u WHERE u.isDelete=false AND u.isActive=TRUE")
+    Long countAllActiveUser();
 
     @Query("SELECT u FROM User u WHERE u.id=:id AND u.isActive=true AND u.isDelete=false")
     User findOneUser(@Param("id") Long id);
