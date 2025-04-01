@@ -40,18 +40,18 @@ public class RoleController {
 
     @RequestMapping(value = "/role/create", method = RequestMethod.POST)
     public CustomResponseEntity<RoleDTO.Response> createRole(
-            @Valid @RequestBody RoleDTO.CreateRoleRequest createRoleRequest)
+            @Valid @RequestBody RoleDTO.CreateRoleRequest createRequest)
     {
-        RoleDTO.Response role = roleService.createRole(createRoleRequest);
+        RoleDTO.Response role = roleService.createRole(createRequest);
         return CustomResponseEntity.showDetail(role);
     }
 
     @RequestMapping(value = "/role/{id}/update", method = RequestMethod.PUT)
     public CustomResponseEntity<RoleDTO.Response> updateRole(
             @PathVariable Long id,
-            @Valid @RequestBody RoleDTO.UpdateRoleRequest updateRoleRequest)
+            @Valid @RequestBody RoleDTO.UpdateRoleRequest updateRequest)
     {
-        RoleDTO.Response role = roleService.updateRole(id, updateRoleRequest);
+        RoleDTO.Response role = roleService.updateRole(id, updateRequest);
         return CustomResponseEntity.showDetail(role);
     }
 

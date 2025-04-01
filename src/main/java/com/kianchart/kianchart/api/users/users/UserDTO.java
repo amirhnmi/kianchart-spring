@@ -2,6 +2,7 @@ package com.kianchart.kianchart.api.users.users;
 
 import com.kianchart.kianchart.core.exception.DuplicationException;
 import com.kianchart.kianchart.core.exception.ValidationException;
+import com.kianchart.kianchart.core.utils.BcryptHashPassword;
 import com.kianchart.kianchart.core.validation.Validation;
 import com.kianchart.kianchart.database.entity.users.User;
 import com.kianchart.kianchart.database.entity.users.UserRole;
@@ -73,7 +74,7 @@ public class UserDTO {
             User user = new User();
             user.setUsername(this.username);
             user.setEmail(this.email);
-            user.setPassword(this.password);
+            user.setPassword(BcryptHashPassword.hash(this.password));
             user.setFullname(this.fullname);
             user.setDateOfBirth(this.birthOfDate);
             user.setGender(this.gender);
@@ -122,7 +123,7 @@ public class UserDTO {
         public void mapToEntityForUpdate(User user) {
             if (this.username != null) user.setUsername(this.username);
             if (this.email != null) user.setEmail(this.email);
-            if (this.password != null) user.setPassword(this.password);
+            if (this.password != null) user.setPassword(BcryptHashPassword.hash(this.password));
             if (this.fullname != null) user.setFullname(this.fullname);
             if (this.birthOfDate != null) user.setDateOfBirth(this.birthOfDate);
             if (this.gender != null) user.setGender(this.gender);

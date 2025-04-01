@@ -4,6 +4,7 @@ import com.kianchart.kianchart.core.enums.SortDirection;
 import com.kianchart.kianchart.core.exception.NotFoundException;
 import com.kianchart.kianchart.database.entity.permissions.Role;
 import com.kianchart.kianchart.database.repository.permissions.RoleRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
