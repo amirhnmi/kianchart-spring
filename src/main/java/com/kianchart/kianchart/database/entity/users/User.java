@@ -1,5 +1,6 @@
 package com.kianchart.kianchart.database.entity.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -39,6 +40,7 @@ public class User {
     private UUID uuid;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<UserRole> userRole;
 
     @Column(name = "is_active",nullable = false)
