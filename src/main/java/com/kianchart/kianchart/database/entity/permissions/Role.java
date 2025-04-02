@@ -1,5 +1,7 @@
 package com.kianchart.kianchart.database.entity.permissions;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kianchart.kianchart.database.entity.users.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,9 +35,11 @@ public class Role {
     private String description;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<RolePermission> rolePermission;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<UserRole> userRole;
 
     @Column(name = "is_delete", nullable = false)

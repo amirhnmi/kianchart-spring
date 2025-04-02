@@ -76,7 +76,7 @@ public class RoleDTO {
         private String slug;
         private String description;
 
-        public static Response mapToDto(Role role) {
+        public static RoleDTO.Response mapToDto(Role role) {
             Response dto = new Response();
             dto.setId(role.getId());
             dto.setName(role.getName());

@@ -1,5 +1,7 @@
 package com.kianchart.kianchart.database.entity.permissions;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +34,7 @@ public class Permission {
     private String description;
 
     @OneToMany(mappedBy = "permission", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<RolePermission> rolePermission;
 
     @Column(name = "is_delete", nullable = false)
