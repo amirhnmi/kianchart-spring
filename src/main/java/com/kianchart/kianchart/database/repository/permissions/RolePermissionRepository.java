@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface RolePermissionRepository extends JpaRepository<RolePermission,Long> {
@@ -19,6 +20,9 @@ public interface RolePermissionRepository extends JpaRepository<RolePermission,L
 
     @Query("SELECT rp FROM RolePermission rp ORDER BY rp.id DESC")
     List<RolePermission> getAllRolePermissionDESC();
+
+    @Query("SELECT rp.permission.id FROM RolePermission rp WHERE rp.role.id=:role_id ORDER BY rp.id ASC")
+    Set<Long> getAllPermissionInRolePermission(@Param("role_id") Long roleId);
 
     @Query("SELECT r FROM Role r WHERE r.id=:id AND r.isDelete=false")
     Role getOneRole(@Param("id") Long id);
@@ -36,4 +40,9 @@ public interface RolePermissionRepository extends JpaRepository<RolePermission,L
     boolean existsByPermissionIdRoleId(@Param("permission_id") Long PermissionId, @Param("role_id") Long roleId);
 
     boolean existsById(Long id);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM RolePermission rp WHERE rp.role.id=:role_id AND rp.permission.id IN :permission_ids")
+    void deleteByRoleIdAndPermissionIds(@Param("role_id") Long roleId, @Param("permission_ids") Set<Long> PermissionIds);
 }

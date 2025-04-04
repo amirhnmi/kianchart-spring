@@ -12,50 +12,41 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RolePermissionDTO {
 
     @Getter
     @Setter
-    public static class CreateRolePermissionRequest{
+    public static class CreateRolePermissionRequest {
         @NotNull(message = "roleId is required")
         private Long roleId;
 
         @NotNull(message = "permissionId is required")
-        private Long permissionId;
+        private List<Long> permissionIds;
 
-        public void validate(RolePermissionRepository rolePermissionRepository){
-            Map<String,String> errors = new HashMap<>();
-            if (!rolePermissionRepository.existsByRoleId(this.roleId)){
-                errors.put("roleId", "roleId not found with id "+ this.roleId);
+        public void validate(RolePermissionRepository rolePermissionRepository) {
+            Map<String, String> errors = new HashMap<>();
+            if (!rolePermissionRepository.existsByRoleId(this.roleId)) {
+                errors.put("roleId", "roleId not found with id " + this.roleId);
             }
-            if (!rolePermissionRepository.existsByPermissionId(this.permissionId)){
-                errors.put("permissionId", "permissionId not found with id "+ this.permissionId);
+            for (Long permissionId : permissionIds) {
+                if (!rolePermissionRepository.existsByPermissionId(permissionId)) {
+                    errors.put("permissionId", "permissionId not found with id " + permissionId);
+                }
+//                if (rolePermissionRepository.existsByPermissionIdRoleId(permissionId, this.roleId)) {
+//                    throw new DuplicationException(
+//                            "roleId with id " + this.roleId + " and permissionId with id " + permissionId + " already exist"
+//                    );
+//                }
             }
-            if (rolePermissionRepository.existsByPermissionIdRoleId(this.permissionId,this.roleId)){
-                throw new DuplicationException(
-                        "roleId with id "+ this.roleId + " and permissionId with id "+ this.permissionId + " already exist"
-                );
-            }
-
-            if (!errors.isEmpty()){
+            if (!errors.isEmpty()) {
                 throw new ValidationException(errors);
             }
         }
 
-        public RolePermission mapToEntity(RolePermissionRepository rolePermissionRepository){
-            Role role = rolePermissionRepository.getOneRole(this.roleId);
-            Permission permission = rolePermissionRepository.getOnePermission(this.permissionId);
-
-            RolePermission rolePermission = new RolePermission();
-            rolePermission.setPermission(permission);
-            rolePermission.setRole(role);
-            return rolePermission;
-        }
+        private void mapToEntity(RolePermissionRepository rolePermissionRepository) {}
     }
 
     @Getter
@@ -65,16 +56,17 @@ public class RolePermissionDTO {
         private PermissionDTO.Response permission;
         private RoleDTO.Response role;
 
-        public static RolePermissionDTO.Response mapToDto(RolePermission rolePermission) {
-            RolePermissionDTO.Response dto = new RolePermissionDTO.Response();
+        public static Response mapToDto(RolePermission rolePermission) {
+            Response dto = new Response();
             dto.setId(rolePermission.getId());
             dto.setRole(RoleDTO.Response.mapToDto(rolePermission.getRole()));
             dto.setPermission(PermissionDTO.Response.mapToDto(rolePermission.getPermission()));
             return dto;
         }
 
-        public static List<RolePermissionDTO.Response> mapToDtoList(List<RolePermission> rolePermissions, int skip, int limit) {
-            return rolePermissions.stream().skip(skip).limit(limit).map(RolePermissionDTO.Response::mapToDto).collect(Collectors.toList());
+        public static List<Response> mapToDtoList(List<RolePermission> rolePermissions, int skip, int limit) {
+            return rolePermissions.stream().skip(skip).limit(limit).map(Response::mapToDto).collect(Collectors.toList());
         }
     }
+
 }

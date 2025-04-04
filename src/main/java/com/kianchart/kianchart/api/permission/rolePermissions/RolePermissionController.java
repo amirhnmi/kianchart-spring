@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -33,11 +34,11 @@ public class RolePermissionController {
     }
 
     @PostMapping(value = "/role-permission/create")
-    public CustomResponseEntity<RolePermissionDTO.Response> createRolePermission(
+    public ResponseEntity<Map<String, String>> createRolePermission(
             @Valid @RequestBody RolePermissionDTO.CreateRolePermissionRequest createRequest
     ){
-        RolePermissionDTO.Response rolePermission = rolePermissionService.createRolePermission(createRequest);
-        return CustomResponseEntity.showDetail(rolePermission);
+        Map<String,String> response = rolePermissionService.createRolePermission(createRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping(value = "/role-permission/{id}/delete")
