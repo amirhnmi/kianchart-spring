@@ -6,11 +6,5 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
-    <include file="migrations/users-changelog.sql"/>
-    <include file="migrations/28-01-changelog.sql"/>
-    <include file="migrations/30-01-permissions-changelog.sql"/>
-    <include file="migrations/30-01-user-role-changelog.sql"/>
-    <include file="migrations/02-01-user-role-changelog.sql"/>
-
-
+    <include file="migrations/03-01-changelog.sql"/>
 </databaseChangeLog>

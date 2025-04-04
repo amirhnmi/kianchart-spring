@@ -56,4 +56,15 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Map<String, Object>> handleBadRequestException(BadRequestException ex){
+        Map<String, Object> errorResponse = new HashMap<>();
+
+        errorResponse.put("status", HttpStatus.BAD_REQUEST.value());
+        errorResponse.put("error","Bad Request Exception");
+        errorResponse.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }

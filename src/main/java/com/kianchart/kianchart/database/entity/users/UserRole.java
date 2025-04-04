@@ -18,7 +18,7 @@ import java.util.Set;
 @Table(name = "user_role")
 public class UserRole {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

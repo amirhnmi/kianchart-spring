@@ -1,41 +1,42 @@
-package com.kianchart.kianchart.database.entity.permissions;
+package com.kianchart.kianchart.database.entity.general;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.kianchart.kianchart.core.enums.FileType;
+import com.kianchart.kianchart.database.entity.users.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "permissions")
-public class Permission {
+@Table(name = "files")
+public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 128, nullable = false)
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "creator_id",nullable = false)
+    private User creator;
 
-    @Column(length = 128, unique = true, nullable = false)
-    private String slug;
+    @Column(length = 256,nullable = false)
+    private String file;
 
-    @Column(length = 512, nullable = false)
-    private String description;
+    @Column(nullable = false)
+    private Long size;
 
-    @OneToMany(mappedBy = "permission", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<RolePermission> rolePermission;
+    @Column(length = 16,nullable = false)
+    @Enumerated(EnumType.STRING)
+    private FileType type;
+
+    @Column(length = 32,nullable = false)
+    private String extension;
 
     @Column(name = "is_delete", nullable = false)
     private Boolean isDelete = false;
