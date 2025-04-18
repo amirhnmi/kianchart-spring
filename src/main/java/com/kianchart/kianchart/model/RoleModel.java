@@ -26,21 +26,6 @@ public class RoleModel {
         @NotBlank(message = "description is required")
         @Size(min = 2, max = 512, message = "description must be between 2 and 512")
         private String description;
-
-        public void validate(RoleRepository roleRepository) {
-            if (roleRepository.existsBySlug(this.slug)) {
-                throw new DuplicationException("slug already exists");
-            }
-        }
-
-        public RoleEntity mapToEntity() {
-            RoleEntity roleEntity = new RoleEntity();
-
-            roleEntity.setName(this.name);
-            roleEntity.setSlug(this.slug);
-            roleEntity.setDescription(this.description);
-            return roleEntity;
-        }
     }
 
     @Getter
@@ -54,18 +39,6 @@ public class RoleModel {
 
         @Size(min = 2, max = 512, message = "description must be between 2 and 512")
         private String description;
-
-        public void validate(RoleRepository roleRepository) {
-            if (this.slug != null && roleRepository.existsBySlug(this.slug)) {
-                throw new DuplicationException("slug already exists");
-            }
-        }
-
-        public void MapToEntityForUpdate(RoleEntity roleEntity) {
-            if (this.name != null) roleEntity.setName(this.name);
-            if (this.slug != null) roleEntity.setSlug(this.slug);
-            if (this.description != null) roleEntity.setDescription(this.description);
-        }
     }
 
     @Getter
@@ -75,19 +48,6 @@ public class RoleModel {
         private String name;
         private String slug;
         private String description;
-
-        public static RoleModel.Response mapToDto(RoleEntity roleEntity) {
-            Response dto = new Response();
-            dto.setId(roleEntity.getId());
-            dto.setName(roleEntity.getName());
-            dto.setSlug(roleEntity.getSlug());
-            dto.setDescription(roleEntity.getDescription());
-            return dto;
-        }
-
-        public static List<Response> mapToDtoList(List<RoleEntity> roleEntities, int skip, int limit) {
-            return roleEntities.stream().skip(skip).limit(limit).map(Response::mapToDto).collect(Collectors.toList());
-        }
     }
 
 

@@ -1,10 +1,13 @@
 package com.kianchart.kianchart.service;
 
+import com.kianchart.kianchart.mapper.UserRoleMapper;
 import com.kianchart.kianchart.model.UserRoleModel;
 import com.kianchart.kianchart.enums.SortDirection;
 import com.kianchart.kianchart.utils.exception.NotFoundException;
 import com.kianchart.kianchart.entity.UserRoleEntity;
 import com.kianchart.kianchart.repository.UserRoleRepository;
+import com.kianchart.kianchart.validation.UserRoleValidator;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,34 +15,36 @@ import java.util.List;
 
 @Service
 public class UserRoleService {
-    private final UserRoleRepository userRoleRepository;
+    private final UserRoleRepository repository;
+    private final UserRoleValidator validator;
 
     @Autowired
-    public UserRoleService(UserRoleRepository userRoleRepository) {
-        this.userRoleRepository = userRoleRepository;
+    public UserRoleService(UserRoleRepository repository, UserRoleValidator validator) {
+        this.repository = repository;
+        this.validator = validator;
     }
 
     public List<UserRoleModel.Response> getAllUserRole(SortDirection sort, int skip, int limit) {
         List<UserRoleEntity> userRoleEntities = sort == SortDirection.asc ?
-                userRoleRepository.getAllUserRoleASC() : userRoleRepository.getAllUserRoleDESC();
-        return UserRoleModel.Response.mapToDtoList(userRoleEntities, skip, limit);
+                repository.getAllUserRoleASC() : repository.getAllUserRoleDESC();
+        return UserRoleMapper.INSTANCE.entitiesToModel(userRoleEntities);
     }
 
     public Long countAllUserRole() {
-        return userRoleRepository.count();
+        return repository.count();
     }
 
     public UserRoleModel.Response createUserRole(UserRoleModel.CreateUserRoleRequest createRequest) {
-        createRequest.validate(userRoleRepository);
-        UserRoleEntity userRoleEntity = createRequest.mapToEntity(userRoleRepository);
-        UserRoleEntity savedUserRoleEntity = userRoleRepository.save(userRoleEntity);
-        return UserRoleModel.Response.mapToDto(savedUserRoleEntity);
+        validator.createValidate(createRequest);
+        UserRoleEntity userRoleEntity = UserRoleMapper.INSTANCE.modelToEntity(createRequest);
+        UserRoleEntity savedUserRoleEntity = repository.save(userRoleEntity);
+        return UserRoleMapper.INSTANCE.entityToModel(savedUserRoleEntity);
     }
 
     public void deleteUserRole(Long id) {
-        if (!userRoleRepository.existsById(id)) {
+        if (!repository.existsById(id)) {
             throw new NotFoundException("data not found with id " + id);
         }
-        userRoleRepository.deleteById(id);
+        repository.deleteById(id);
     }
 }

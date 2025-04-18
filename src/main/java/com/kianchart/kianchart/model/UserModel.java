@@ -29,8 +29,8 @@ public class UserModel {
         @Size(min = 2, max = 128, message = "fullname must be between 2 and 128")
         private String fullname;
 
-        @NotNull(message = "birthOfDate is required")
-        private LocalDate birthOfDate;
+        @NotNull(message = "dateOfBirth is required")
+        private LocalDate dateOfBirth;
 
         @NotBlank(message = "gender is required")
         private String gender;

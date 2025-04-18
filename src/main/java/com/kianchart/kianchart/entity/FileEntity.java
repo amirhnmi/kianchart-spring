@@ -1,5 +1,6 @@
 package com.kianchart.kianchart.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kianchart.kianchart.enums.FileType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,9 +21,12 @@ public class FileEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "creator_id",nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id",insertable = false,updatable = false)
     private UserEntity creator;
+
+    @Column(name = "creator_id", nullable = false)
+    private Long creatorId;
 
     @Column(length = 256,nullable = false)
     private String file;

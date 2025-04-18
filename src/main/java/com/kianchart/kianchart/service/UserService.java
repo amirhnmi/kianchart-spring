@@ -15,20 +15,18 @@ import java.util.List;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final UserValidator userValidator;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserMapper userMapper, UserValidator userValidator) {
+    public UserService(UserRepository userRepository, UserValidator userValidator) {
         this.userRepository = userRepository;
-        this.userMapper = userMapper;
         this.userValidator = userValidator;
     }
 
     public List<UserModel.Response> getAllUser(SortDirection sort, int skip, int limit) {
         List<UserEntity> userEntities = sort == SortDirection.asc ?
                 userRepository.findAllUsersASC() : userRepository.findAllUsersDESC();
-        return userMapper.toUserModelList(userEntities);
+        return UserMapper.INSTANCE.toUserModelList(userEntities);
     }
 
     public Long countAllUser() {
@@ -39,23 +37,22 @@ public class UserService {
         UserEntity userEntity = userRepository.findOneUser(id);
         if (userEntity == null)
             throw new NotFoundException("data not found with id " + id);
-        return userMapper.toUserModel(userEntity);
+        return UserMapper.INSTANCE.toUserModel(userEntity);
     }
 
     public UserModel.Response createUser(UserModel.Create createUser) {
         userValidator.createValidate(createUser);
-        UserEntity userEntity = userMapper.toUserEntity(createUser);
+        UserEntity userEntity = UserMapper.INSTANCE.toUserEntity(createUser);
         UserEntity saveedUserEntity = userRepository.save(userEntity);
-        return userMapper.toUserModel(saveedUserEntity);
+        return UserMapper.INSTANCE.toUserModel(saveedUserEntity);
     }
 
     public UserModel.Response updateUser(Long id, UserModel.Update updateUser) {
-        UserEntity existingUserEntity = userRepository.findById(id)
-                .orElseThrow(()-> new NotFoundException("Data not found with id " + id));
+        UserEntity existingUserEntity = userRepository.findById(id).orElseThrow(()-> new NotFoundException("Data not found with id " + id));
         userValidator.updateValidate(updateUser);
-        userMapper.toUserEntityForUpdate(updateUser);
+        UserMapper.INSTANCE.toUserEntityForUpdate(updateUser,existingUserEntity);
         UserEntity updatedUserEntity = userRepository.save(existingUserEntity);
-        return userMapper.toUserModel(updatedUserEntity);
+        return UserMapper.INSTANCE.toUserModel(updatedUserEntity);
     }
 
     public void deleteUser(Long id) {
