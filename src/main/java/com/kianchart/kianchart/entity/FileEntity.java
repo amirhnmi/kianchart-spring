@@ -21,12 +21,13 @@ public class FileEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "creator_id", nullable = false)
+    private Long creatorId;
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id",insertable = false,updatable = false)
     private UserEntity creator;
-
-    @Column(name = "creator_id", nullable = false)
-    private Long creatorId;
 
     @Column(length = 256,nullable = false)
     private String file;

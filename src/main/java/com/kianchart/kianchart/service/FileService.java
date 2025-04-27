@@ -1,5 +1,6 @@
 package com.kianchart.kianchart.service;
 
+import com.kianchart.kianchart.entity.UserEntity;
 import com.kianchart.kianchart.mapper.FileMapper;
 import com.kianchart.kianchart.model.FileModel;
 import com.kianchart.kianchart.enums.FileType;
@@ -9,6 +10,7 @@ import com.kianchart.kianchart.utils.UploadFile;
 import com.kianchart.kianchart.entity.FileEntity;
 import com.kianchart.kianchart.repository.FileRepository;
 import com.kianchart.kianchart.validation.FileValidator;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,33 +24,35 @@ import java.util.List;
 public class FileService {
     private final FileRepository repository;
     private final FileValidator validator;
-    private final FileMapper mapper;
+//    private final FileMapper mapper;
 
     @Autowired
-    public FileService(FileRepository fileRepository, FileValidator validator, FileMapper mapper) {
+    public FileService(FileRepository fileRepository, FileValidator validator) {
         this.repository = fileRepository;
         this.validator = validator;
 
-        this.mapper = mapper;
+//        this.mapper = mapper;
     }
 
     public List<FileModel.Response> getAllFile(SortDirection sort, int skip, int limit, FileType fileType) {
         List<FileEntity> files = sort == SortDirection.asc ?
                 repository.getAllFileASC(fileType) : repository.getAllImageDESC(fileType);
-        return mapper.entitiesToModel(files);
+        return FileMapper.INSTANCE.entitiesToModel(files);
     }
 
     public Long countAllFile(FileType fileType) {
         return repository.countAllFile(fileType);
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public FileModel.Response createFile(MultipartFile file, Long creatorId, FileType fileType) throws IOException {
         FileModel.CreateFileRequest fileRequest = new FileModel.CreateFileRequest();
         fileRequest.setCreatorId(creatorId);
-        fileRequest.setContent(file.getBytes());
         fileRequest.setType(fileType);
+        fileRequest.setExtension(file.getOriginalFilename());
+        fileRequest.setSize(file.getSize());
 
-        FileEntity fileEntity = mapper.modelToEntity(fileRequest);
+        FileEntity fileEntity = FileMapper.INSTANCE.modelToEntity(fileRequest);
 
         if (fileType == FileType.image) {
             validator.imageValidation(file);
@@ -64,7 +68,7 @@ public class FileService {
             fileEntity.setFile(documentNameSaved);
         }
         FileEntity savedFile = repository.save(fileEntity);
-        return mapper.entityToModel(savedFile);
+        return FileMapper.INSTANCE.entityToModel(savedFile);
     }
 
     public void deleteFile(Long id) {

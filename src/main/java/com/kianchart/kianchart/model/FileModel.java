@@ -16,34 +16,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FileModel {
+    @Getter
+    @Setter
     public static class CreateFileRequest {
-        public byte[] getContent() {
-            return content;
-        }
-
-        public void setContent(byte[] content) {
-            this.content = content;
-        }
-
-        public Long getCreatorId() {
-            return creatorId;
-        }
-
-        public void setCreatorId(Long creatorId) {
-            this.creatorId = creatorId;
-        }
-
-        public FileType getType() {
-            return type;
-        }
-
-        public void setType(FileType type) {
-            this.type = type;
-        }
-
-        private byte[] content;
         private Long creatorId;
         private FileType type;
+        private String extension;
+        private Long size;
     }
 
     @Getter
