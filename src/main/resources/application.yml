@@ -1,9 +1,13 @@
+server:
+  port: 8000
+  address: localhost
+
 spring:
   application:
     name: kianchart
 
   datasource:
-    url: postgresql://localhost:5432/kian_test
+    url: jdbc:postgresql://localhost:5432/kian_test
     username: cloud
     password: postgres
 

@@ -12,7 +12,9 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Data @NoArgsConstructor @AllArgsConstructor
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 public class UserEntity {
     @Id
@@ -43,7 +45,7 @@ public class UserEntity {
     @JsonIgnore
     private Set<UserRoleEntity> userRoles;
 
-    @Column(name = "is_active",nullable = false)
+    @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
     @Column(name = "is_delete", nullable = false)

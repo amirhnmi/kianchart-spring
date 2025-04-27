@@ -1,4 +1,4 @@
-package com.kianchart.kianchart.config;
+package com.kianchart.kianchart.controller;
 
 import com.kianchart.kianchart.model.RolePermissionModel;
 import com.kianchart.kianchart.service.RolePermissionService;
