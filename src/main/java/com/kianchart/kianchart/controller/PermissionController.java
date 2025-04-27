@@ -35,7 +35,7 @@ public class PermissionController {
     }
 
     @RequestMapping(value = "/permission/{id}/show", method = RequestMethod.GET)
-    public CustomResponseEntity<PermissionModel.Response> getOnePermission(@PathVariable Long id){
+    public CustomResponseEntity<PermissionModel.Response> getOnePermission(@PathVariable Long id) {
         PermissionModel.Response permission = permissionService.getOnePermission(id);
         return CustomResponseEntity.showDetail(permission);
     }
@@ -43,7 +43,7 @@ public class PermissionController {
     @RequestMapping(value = "/permission/create", method = RequestMethod.POST)
     public CustomResponseEntity<PermissionModel.Response> createPermission(
             @Valid @RequestBody PermissionModel.CreatePermissionRequest createRequest
-    ){
+    ) {
         PermissionModel.Response permission = permissionService.createPermission(createRequest);
         return CustomResponseEntity.showDetail(permission);
     }
@@ -52,13 +52,13 @@ public class PermissionController {
     public CustomResponseEntity<PermissionModel.Response> UpdatePermission(
             @PathVariable Long id,
             @Valid @RequestBody PermissionModel.UpdatePermissionRequest updateRequest
-    ){
-        PermissionModel.Response permission = permissionService.updatePermission(id,updateRequest);
+    ) {
+        PermissionModel.Response permission = permissionService.updatePermission(id, updateRequest);
         return CustomResponseEntity.showDetail(permission);
     }
 
     @RequestMapping(value = "/permission/{id}/delete", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deletePermission(@PathVariable Long id){
+    public ResponseEntity<String> deletePermission(@PathVariable Long id) {
         permissionService.deletePermission(id);
         return ResponseEntity.status(HttpStatus.OK).body("data successfully deleted");
     }
