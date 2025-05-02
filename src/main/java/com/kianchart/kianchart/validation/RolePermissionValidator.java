@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+
+// این فقط یه تغیی برای اینکه بفهمم اطلاعات از مستر به استیبل چطور میره
 @Component
 public class RolePermissionValidator {
     Map<String, String> errors = new HashMap<>();
