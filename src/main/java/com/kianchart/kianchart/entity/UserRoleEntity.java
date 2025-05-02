@@ -1,5 +1,6 @@
 package com.kianchart.kianchart.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,13 +19,21 @@ public class UserRoleEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private UserEntity user;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", insertable = false, updatable = false)
     private RoleEntity role;
+
+    @Column(name = "role_id", nullable = false)
+    private Long roleId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp

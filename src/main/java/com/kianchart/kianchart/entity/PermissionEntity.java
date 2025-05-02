@@ -32,10 +32,6 @@ public class PermissionEntity {
     @Column(length = 512, nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "permission", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<RolePermissionEntity> rolePermission;
-
     @Column(name = "is_delete", nullable = false)
     private Boolean isDelete = false;
 

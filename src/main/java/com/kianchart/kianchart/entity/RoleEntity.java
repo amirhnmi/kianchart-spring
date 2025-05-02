@@ -32,14 +32,6 @@ public class RoleEntity {
     @Column(length = 512, nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<RolePermissionEntity> rolePermissionEntity;
-
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<UserRoleEntity> userRoleEntity;
-
     @Column(name = "is_delete", nullable = false)
     private Boolean isDelete = false;
 
