@@ -69,4 +69,16 @@ public class UserModel {
         private Boolean isActive;
         private UserRoleEntity userRole;
     }
+
+    @Getter
+    @Setter
+    public static class Search extends UserModel {
+        private Long id;
+        private String email;
+        private String username;
+        private String fullname;
+        private LocalDate birthOfDate;
+        private String gender;
+        private Boolean isActive;
+    }
 }

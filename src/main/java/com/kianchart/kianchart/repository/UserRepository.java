@@ -2,7 +2,11 @@ package com.kianchart.kianchart.repository;
 
 import com.kianchart.kianchart.entity.UserEntity;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,13 +16,10 @@ import java.util.List;
 
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Long>, JpaSpecificationExecutor<UserEntity> {
 
-    @Query("SELECT u FROM UserEntity u WHERE u.isActive=true AND u.isDelete=false ORDER BY u.id asc")
-    List<UserEntity> findAllUsersASC();
-
-    @Query("SELECT u FROM UserEntity u WHERE u.isActive=true AND u.isDelete=false ORDER BY u.id desc")
-    List<UserEntity> findAllUsersDESC();
+    @Query("SELECT u FROM UserEntity u WHERE u.isActive=true AND u.isDelete=false")
+    Page<UserEntity> findAllUsers(Specification<UserEntity> spec, Pageable pageable);
 
     @Query("SELECT COUNT(u) FROM UserEntity u WHERE u.isDelete=false AND u.isActive=TRUE")
     Long countAllActiveUser();

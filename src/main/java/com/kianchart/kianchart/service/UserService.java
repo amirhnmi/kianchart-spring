@@ -3,11 +3,16 @@ package com.kianchart.kianchart.service;
 import com.kianchart.kianchart.model.UserModel;
 import com.kianchart.kianchart.enums.SortDirection;
 import com.kianchart.kianchart.mapper.UserMapper;
+import com.kianchart.kianchart.restriction.UserRestriction;
 import com.kianchart.kianchart.utils.exception.NotFoundException;
 import com.kianchart.kianchart.entity.UserEntity;
 import com.kianchart.kianchart.repository.UserRepository;
 import com.kianchart.kianchart.validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +30,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserModel.Response> getAllUser(SortDirection sort, int skip, int limit) {
-        List<UserEntity> userEntities = sort == SortDirection.asc ?
-                userRepository.findAllUsersASC() : userRepository.findAllUsersDESC();
-        return UserMapper.INSTANCE.toUserModelList(userEntities);
+    public List<UserModel.Response> getAllUser(UserModel.Search search,SortDirection sort, int skip, int limit) {
+        UserRestriction restriction = new UserRestriction(search);
+        Sort sortObj = sort == SortDirection.asc ? Sort.by("id").ascending() : Sort.by("id").descending();
+        Pageable pageable = PageRequest.of(skip, limit, sortObj);
+        Page<UserEntity> users = userRepository.findAllUsers(restriction, pageable);
+        return UserMapper.INSTANCE.toUserModelList(users.getContent());
     }
 
     @Transactional(readOnly = true)

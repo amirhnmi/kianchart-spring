@@ -28,9 +28,10 @@ public class UserController {
             @RequestParam(defaultValue = "asc") SortDirection sort,
             @RequestParam(defaultValue = "0") int skip,
             @RequestParam(defaultValue = "20") int limit,
-            @RequestParam(defaultValue = "false") boolean total
+            @RequestParam(defaultValue = "false") boolean total,
+            @RequestBody @Valid UserModel.Search search
     ) {
-        List<UserModel.Response> users = userService.getAllUser(sort, skip, limit);
+        List<UserModel.Response> users = userService.getAllUser(search,sort, skip, limit);
         Long totalCount = total ? userService.countAllUser() : null;
         return CustomResponseEntity.showList(users, totalCount);
     }
