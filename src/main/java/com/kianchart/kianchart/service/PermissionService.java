@@ -9,6 +9,7 @@ import com.kianchart.kianchart.repository.PermissionRepository;
 import com.kianchart.kianchart.validation.PermissionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,16 +24,19 @@ public class PermissionService {
         this.validator = validator;
     }
 
+    @Transactional(readOnly = true)
     public List<PermissionModel.Response> getAllPermission(SortDirection sort, int skip, int limit) {
         List<PermissionEntity> permissionEntities = sort == SortDirection.asc ?
                 repository.getAllPermissionASC() : repository.getAllPermissionDESC();
         return PermissionMapper.INSTANCE.entitiesToModel(permissionEntities);
     }
 
+    @Transactional(readOnly = true)
     public Long countAllPermissions() {
         return repository.countAllPermissions();
     }
 
+    @Transactional(readOnly = true)
     public PermissionModel.Response getOnePermission(Long id) {
         PermissionEntity permissionEntity = repository.getOnePermission(id);
         if (permissionEntity == null) {
@@ -41,6 +45,7 @@ public class PermissionService {
         return PermissionMapper.INSTANCE.entityToModel(permissionEntity);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public PermissionModel.Response createPermission(PermissionModel.CreatePermissionRequest createRequest) {
         validator.createValidate(createRequest);
         PermissionEntity permissionEntity = PermissionMapper.INSTANCE.modelToEntity(createRequest);
@@ -48,6 +53,7 @@ public class PermissionService {
         return PermissionMapper.INSTANCE.entityToModel(savedPermissionEntity);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public PermissionModel.Response updatePermission(Long id, PermissionModel.UpdatePermissionRequest updateRequest) {
         PermissionEntity permissionEntity = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("data not found with id " + id));
@@ -57,6 +63,7 @@ public class PermissionService {
         return PermissionMapper.INSTANCE.entityToModel(updatedPermissionEntity);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void deletePermission(Long id) {
         if (!repository.existsById(id)) {
             throw new NotFoundException("data not found with id " + id);

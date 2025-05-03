@@ -9,6 +9,7 @@ import com.kianchart.kianchart.repository.UserRepository;
 import com.kianchart.kianchart.validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,16 +24,19 @@ public class UserService {
         this.userValidator = userValidator;
     }
 
+    @Transactional(readOnly = true)
     public List<UserModel.Response> getAllUser(SortDirection sort, int skip, int limit) {
         List<UserEntity> userEntities = sort == SortDirection.asc ?
                 userRepository.findAllUsersASC() : userRepository.findAllUsersDESC();
         return UserMapper.INSTANCE.toUserModelList(userEntities);
     }
 
+    @Transactional(readOnly = true)
     public Long countAllUser() {
         return userRepository.countAllActiveUser();
     }
 
+    @Transactional(readOnly = true)
     public UserModel.Response getUserById(Long id) {
         UserEntity userEntity = userRepository.findOneUser(id);
         if (userEntity == null)
@@ -40,6 +44,7 @@ public class UserService {
         return UserMapper.INSTANCE.toUserModel(userEntity);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public UserModel.Response createUser(UserModel.Create createUser) {
         userValidator.createValidate(createUser);
         UserEntity userEntity = UserMapper.INSTANCE.toUserEntity(createUser);
@@ -47,6 +52,7 @@ public class UserService {
         return UserMapper.INSTANCE.toUserModel(saveedUserEntity);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public UserModel.Response updateUser(Long id, UserModel.Update updateUser) {
         UserEntity existingUserEntity = userRepository.findById(id).orElseThrow(()-> new NotFoundException("Data not found with id " + id));
         userValidator.updateValidate(updateUser);
@@ -55,6 +61,7 @@ public class UserService {
         return UserMapper.INSTANCE.toUserModel(updatedUserEntity);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)){
             throw new NotFoundException("data not found with id " + id);

@@ -10,7 +10,7 @@ import com.kianchart.kianchart.utils.UploadFile;
 import com.kianchart.kianchart.entity.FileEntity;
 import com.kianchart.kianchart.repository.FileRepository;
 import com.kianchart.kianchart.validation.FileValidator;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,17 +34,19 @@ public class FileService {
 //        this.mapper = mapper;
     }
 
+    @Transactional(readOnly = true)
     public List<FileModel.Response> getAllFile(SortDirection sort, int skip, int limit, FileType fileType) {
         List<FileEntity> files = sort == SortDirection.asc ?
                 repository.getAllFileASC(fileType) : repository.getAllImageDESC(fileType);
         return FileMapper.INSTANCE.entitiesToModel(files);
     }
 
+    @Transactional(readOnly = true)
     public Long countAllFile(FileType fileType) {
         return repository.countAllFile(fileType);
     }
 
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public FileModel.Response createFile(MultipartFile file, Long creatorId, FileType fileType) throws IOException {
         FileModel.CreateFileRequest fileRequest = new FileModel.CreateFileRequest();
         fileRequest.setCreatorId(creatorId);
@@ -71,6 +73,7 @@ public class FileService {
         return FileMapper.INSTANCE.entityToModel(savedFile);
     }
 
+    @Transactional(readOnly = true)
     public void deleteFile(Long id) {
         if (!repository.existingById(id)) {
             throw new NotFoundException("data not found with id " + id);

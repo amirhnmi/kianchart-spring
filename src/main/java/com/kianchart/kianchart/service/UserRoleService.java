@@ -10,6 +10,7 @@ import com.kianchart.kianchart.validation.UserRoleValidator;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,16 +25,19 @@ public class UserRoleService {
         this.validator = validator;
     }
 
+    @Transactional(readOnly = true)
     public List<UserRoleModel.Response> getAllUserRole(SortDirection sort, int skip, int limit) {
         List<UserRoleEntity> userRoleEntities = sort == SortDirection.asc ?
                 repository.getAllUserRoleASC() : repository.getAllUserRoleDESC();
         return UserRoleMapper.INSTANCE.entitiesToModel(userRoleEntities);
     }
 
+    @Transactional(readOnly = true)
     public Long countAllUserRole() {
         return repository.count();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public UserRoleModel.Response createUserRole(UserRoleModel.CreateUserRoleRequest createRequest) {
         validator.createValidate(createRequest);
         UserRoleEntity userRoleEntity = UserRoleMapper.INSTANCE.modelToEntity(createRequest);
@@ -41,6 +45,7 @@ public class UserRoleService {
         return UserRoleMapper.INSTANCE.entityToModel(savedUserRoleEntity);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void deleteUserRole(Long id) {
         if (!repository.existsById(id)) {
             throw new NotFoundException("data not found with id " + id);

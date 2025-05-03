@@ -9,7 +9,7 @@ import com.kianchart.kianchart.utils.exception.NotFoundException;
 import com.kianchart.kianchart.entity.RolePermissionEntity;
 import com.kianchart.kianchart.repository.RolePermissionRepository;
 import com.kianchart.kianchart.validation.RolePermissionValidator;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +26,7 @@ public class RolePermissionService {
         this.validator = validator;
     }
 
+    @Transactional(readOnly = true)
     public List<RolePermissionModel.Response> getAllRolePermission(SortDirection sort, int skip, int limit){
         List<RolePermissionEntity> rolePermissionEntities = sort == SortDirection.asc ?
                 repository.getAllRolePermissionASC() : repository.getAllRolePermissionDESC();
@@ -36,7 +37,7 @@ public class RolePermissionService {
         return repository.count();
     }
 
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public Map<String, String> createRolePermission(RolePermissionModel.CreateRolePermissionRequest createRequest){
         List<RolePermissionEntity> data = new ArrayList<>();
         Map<String, String> response = new HashMap<>();
@@ -74,6 +75,7 @@ public class RolePermissionService {
         return response;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void deleteRolePermission(Long id){
         if (!repository.existsById(id)){
             throw new NotFoundException("data not found with id " + id);
