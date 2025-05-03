@@ -25,7 +25,7 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @GetMapping("/file/list")
+    @PostMapping("/file/list")
     public CustomResponseEntity<List<FileModel.Response>> getAllFile(
             @RequestParam FileType fileType,
             @RequestParam(defaultValue = "asc") SortDirection sort,
@@ -48,7 +48,7 @@ public class FileController {
         return CustomResponseEntity.showDetail(fileResponse);
     }
 
-    @DeleteMapping("/file/{id}/delete")
+    @PostMapping("/file/{id}/delete")
     public ResponseEntity<String> deleteFile(@PathVariable Long id) {
         fileService.deleteFile(id);
         return ResponseEntity.status(HttpStatus.OK).body("data successfully deleted");

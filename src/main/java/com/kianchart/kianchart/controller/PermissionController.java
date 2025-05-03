@@ -22,7 +22,7 @@ public class PermissionController {
         this.permissionService = permissionService;
     }
 
-    @RequestMapping(value = "/permission/list", method = RequestMethod.GET)
+    @PostMapping(value = "/permission/list")
     public CustomResponseEntity<List<PermissionModel.Response>> getAllPermission(
             @RequestParam(defaultValue = "asc") SortDirection sort,
             @RequestParam(defaultValue = "0") int skip,
@@ -34,13 +34,13 @@ public class PermissionController {
         return CustomResponseEntity.showList(permissions, totalCount);
     }
 
-    @RequestMapping(value = "/permission/{id}/show", method = RequestMethod.GET)
+    @PostMapping(value = "/permission/{id}/show")
     public CustomResponseEntity<PermissionModel.Response> getOnePermission(@PathVariable Long id) {
         PermissionModel.Response permission = permissionService.getOnePermission(id);
         return CustomResponseEntity.showDetail(permission);
     }
 
-    @RequestMapping(value = "/permission/create", method = RequestMethod.POST)
+    @PostMapping(value = "/permission/create")
     public CustomResponseEntity<PermissionModel.Response> createPermission(
             @Valid @RequestBody PermissionModel.CreatePermissionRequest createRequest
     ) {
@@ -48,7 +48,7 @@ public class PermissionController {
         return CustomResponseEntity.showDetail(permission);
     }
 
-    @RequestMapping(value = "/permission/{id}/update", method = RequestMethod.PUT)
+    @PostMapping(value = "/permission/{id}/update")
     public CustomResponseEntity<PermissionModel.Response> UpdatePermission(
             @PathVariable Long id,
             @Valid @RequestBody PermissionModel.UpdatePermissionRequest updateRequest
@@ -57,7 +57,7 @@ public class PermissionController {
         return CustomResponseEntity.showDetail(permission);
     }
 
-    @RequestMapping(value = "/permission/{id}/delete", method = RequestMethod.DELETE)
+    @PostMapping(value = "/permission/{id}/delete")
     public ResponseEntity<String> deletePermission(@PathVariable Long id) {
         permissionService.deletePermission(id);
         return ResponseEntity.status(HttpStatus.OK).body("data successfully deleted");

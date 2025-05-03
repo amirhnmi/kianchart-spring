@@ -22,7 +22,7 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-    @RequestMapping(value = "/role/list", method = RequestMethod.GET)
+    @PostMapping(value = "/role/list")
     public CustomResponseEntity<List<RoleModel.Response>> getAllRole(
             @RequestParam(defaultValue = "asc") SortDirection sort,
             @RequestParam(defaultValue = "0") int skip,
@@ -34,13 +34,13 @@ public class RoleController {
         return CustomResponseEntity.showList(roles,totalValue);
     }
 
-    @RequestMapping(value = "/role/{id}/show", method = RequestMethod.GET)
+    @PostMapping(value = "/role/{id}/show")
     public CustomResponseEntity<RoleModel.Response> getOneRole(@PathVariable Long id) {
         RoleModel.Response role = roleService.getOneRole(id);
         return CustomResponseEntity.showDetail(role);
     }
 
-    @RequestMapping(value = "/role/create", method = RequestMethod.POST)
+    @PostMapping(value = "/role/create")
     public CustomResponseEntity<RoleModel.Response> createRole(
             @Valid @RequestBody RoleModel.CreateRoleRequest createRequest)
     {
@@ -48,7 +48,7 @@ public class RoleController {
         return CustomResponseEntity.showDetail(role);
     }
 
-    @RequestMapping(value = "/role/{id}/update", method = RequestMethod.PUT)
+    @PostMapping(value = "/role/{id}/update")
     public CustomResponseEntity<RoleModel.Response> updateRole(
             @PathVariable Long id,
             @Valid @RequestBody RoleModel.UpdateRoleRequest updateRequest)
@@ -57,7 +57,7 @@ public class RoleController {
         return CustomResponseEntity.showDetail(role);
     }
 
-    @RequestMapping(value = "/role/{id}/delete", method = RequestMethod.DELETE)
+    @PostMapping(value = "/role/{id}/delete")
     public ResponseEntity<String> deleteRole(@PathVariable Long id){
         roleService.deleteRole(id);
         return ResponseEntity.status(HttpStatus.OK).body("data successfully deleted");

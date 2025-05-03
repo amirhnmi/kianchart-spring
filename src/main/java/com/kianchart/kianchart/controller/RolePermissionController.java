@@ -23,7 +23,7 @@ public class RolePermissionController {
         this.rolePermissionService = rolePermissionService;
     }
 
-    @GetMapping(value = "/role-permission/list")
+    @PostMapping(value = "/role-permission/list")
     public CustomResponseEntity<List<RolePermissionModel.Response>> getAllRolePermission(
             @RequestParam(defaultValue = "asc") SortDirection sort,
             @RequestParam(defaultValue = "0") int skip,
@@ -43,7 +43,7 @@ public class RolePermissionController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping(value = "/role-permission/{id}/delete")
+    @PostMapping(value = "/role-permission/{id}/delete")
     public ResponseEntity<String> deleteRolePermission(@PathVariable Long id){
         rolePermissionService.deleteRolePermission(id);
         return ResponseEntity.status(HttpStatus.OK).body("data successfully deleted");

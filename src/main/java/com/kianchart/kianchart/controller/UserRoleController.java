@@ -22,7 +22,7 @@ public class UserRoleController {
         this.userRoleService = userRoleService;
     }
 
-    @GetMapping(value = "/user-role/list")
+    @PostMapping(value = "/user-role/list")
     public CustomResponseEntity<List<UserRoleModel.Response>> getAllUserRole(
             @RequestParam(defaultValue = "asc") SortDirection sort,
             @RequestParam(defaultValue = "0") int skip,
@@ -42,7 +42,7 @@ public class UserRoleController {
         return CustomResponseEntity.showDetail(userRole);
     }
 
-    @DeleteMapping(value = "/user-role/{id}/delete")
+    @PostMapping(value = "/user-role/{id}/delete")
     public ResponseEntity<String> deleteUserRole(@PathVariable Long id) {
         userRoleService.deleteUserRole(id);
         return ResponseEntity.status(HttpStatus.OK).body("data successfully deleted");

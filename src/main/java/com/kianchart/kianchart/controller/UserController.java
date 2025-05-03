@@ -23,7 +23,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/user/list", method = RequestMethod.GET)
+    @PostMapping(value = "/user/list")
     public CustomResponseEntity<List<UserModel.Response>> getAllUsers(
             @RequestParam(defaultValue = "asc") SortDirection sort,
             @RequestParam(defaultValue = "0") int skip,
@@ -35,20 +35,20 @@ public class UserController {
         return CustomResponseEntity.showList(users, totalCount);
     }
 
-    @RequestMapping(value = "/user/{id}/show", method = RequestMethod.GET)
+    @PostMapping(value = "/user/{id}/show")
     public CustomResponseEntity<UserModel.Response> getOneUser(@PathVariable Long id) {
         UserModel.Response user = userService.getUserById(id);
         return CustomResponseEntity.showDetail(user);
     }
 
-    @RequestMapping(value = "/user/create", method = RequestMethod.POST)
+    @PostMapping(value = "/user/create")
     public CustomResponseEntity<UserModel.Response> createUser(
             @Valid @RequestBody UserModel.Create user) {
         UserModel.Response response = userService.createUser(user);
         return CustomResponseEntity.showDetail(response);
     }
 
-    @RequestMapping(value = "/user/{id}/update", method = RequestMethod.PUT)
+    @PostMapping(value = "/user/{id}/update")
     public CustomResponseEntity<UserModel.Response> updateUser(
             @PathVariable Long id,
             @Valid @RequestBody UserModel.Update user) {
@@ -56,7 +56,7 @@ public class UserController {
         return CustomResponseEntity.showDetail(response);
     }
 
-    @RequestMapping(value = "/user/{id}/delete", method = RequestMethod.DELETE)
+    @PostMapping(value = "/user/{id}/delete")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.status(HttpStatus.OK).body("data successfully deleted");
