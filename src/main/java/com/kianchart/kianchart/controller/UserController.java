@@ -25,13 +25,13 @@ public class UserController {
 
     @PostMapping(value = "/user/list")
     public CustomResponseEntity<List<UserModel.Response>> getAllUsers(
+            @Valid @RequestBody(required = false) UserModel.Filter filter,
             @RequestParam(defaultValue = "asc") SortDirection sort,
             @RequestParam(defaultValue = "0") int skip,
             @RequestParam(defaultValue = "20") int limit,
-            @RequestParam(defaultValue = "false") boolean total,
-            @RequestBody @Valid UserModel.Search search
+            @RequestParam(defaultValue = "false") boolean total
     ) {
-        List<UserModel.Response> users = userService.getAllUser(search,sort, skip, limit);
+        List<UserModel.Response> users = userService.getAllUser(filter,sort, skip, limit);
         Long totalCount = total ? userService.countAllUser() : null;
         return CustomResponseEntity.showList(users, totalCount);
     }
@@ -44,8 +44,8 @@ public class UserController {
 
     @PostMapping(value = "/user/create")
     public CustomResponseEntity<UserModel.Response> createUser(
-            @Valid @RequestBody UserModel.Create user) {
-        UserModel.Response response = userService.createUser(user);
+            @Valid @RequestBody UserModel.Create userModel) {
+        UserModel.Response response = userService.createUser(userModel);
         return CustomResponseEntity.showDetail(response);
     }
 

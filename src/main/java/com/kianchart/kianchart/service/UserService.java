@@ -30,11 +30,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserModel.Response> getAllUser(UserModel.Search search,SortDirection sort, int skip, int limit) {
-        UserRestriction restriction = new UserRestriction(search);
+    public List<UserModel.Response> getAllUser(UserModel.Filter filter,SortDirection sort, int skip, int limit) {
+        UserRestriction restriction = new UserRestriction(filter);
         Sort sortObj = sort == SortDirection.asc ? Sort.by("id").ascending() : Sort.by("id").descending();
         Pageable pageable = PageRequest.of(skip, limit, sortObj);
-        Page<UserEntity> users = userRepository.findAllUsers(restriction, pageable);
+        Page<UserEntity> users = userRepository.findAll(restriction, pageable);
         return UserMapper.INSTANCE.toUserModelList(users.getContent());
     }
 

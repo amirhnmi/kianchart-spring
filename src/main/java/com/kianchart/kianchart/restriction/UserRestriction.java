@@ -16,26 +16,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRestriction implements Specification<UserEntity> {
-    private final UserModel.Search userModelSearch;
+    private final UserModel.Filter userModelFilter;
 
-    public UserRestriction(UserModel.Search userModelSearch) {
-        this.userModelSearch = userModelSearch;
+    public UserRestriction(UserModel.Filter userModelSearch) {
+        this.userModelFilter = userModelSearch;
     }
-
     @Override
     public Predicate toPredicate(Root<UserEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
-        if (userModelSearch.getFullname() != null && StringUtils.isNotBlank(userModelSearch.getFullname())) {
-            predicates.add(criteriaBuilder.like(root.get("fullname"), "%" + userModelSearch.getFullname() + "%"));
+
+        predicates.add(criteriaBuilder.isTrue(root.get("isActive")));
+        predicates.add(criteriaBuilder.isFalse(root.get("isDelete")));
+
+        if (userModelFilter.getUsername() != null && StringUtils.isNotBlank(userModelFilter.getUsername())) {
+            predicates.add(criteriaBuilder.like(root.get("username"), "%" + userModelFilter.getUsername() + "%"));
         }
-        if (userModelSearch.getEmail() != null && StringUtils.isNotBlank(userModelSearch.getEmail())) {
-            predicates.add(criteriaBuilder.equal(root.get("email"), userModelSearch.getEmail()));
+        if (userModelFilter.getEmail() != null && StringUtils.isNotBlank(userModelFilter.getEmail())) {
+            predicates.add(criteriaBuilder.like(root.get("email"), "%" + userModelFilter.getEmail() + "%"));
         }
-        if (userModelSearch.getIsActive() != null && userModelSearch.getIsActive()) {
-            predicates.add(criteriaBuilder.equal(root.get("isActive"), true));
+        if (userModelFilter.getFullname() != null && StringUtils.isNotBlank(userModelFilter.getFullname())){
+            predicates.add(criteriaBuilder.like(root.get("fullname"), "%" + userModelFilter.getFullname() + "%"));
         }
-        if (userModelSearch.getGender() != null && StringUtils.isNotBlank(userModelSearch.getGender())) {
-            predicates.add(criteriaBuilder.equal(root.get("gender"), userModelSearch.getGender()));
+        if (userModelFilter.getIsActive() != null) {
+            predicates.add(criteriaBuilder.equal(root.get("isActive"), userModelFilter.getIsActive()));
+        }
+        if (userModelFilter.getGender() != null && StringUtils.isNotBlank(userModelFilter.getGender())) {
+            predicates.add(criteriaBuilder.equal(root.get("gender"), userModelFilter.getGender()));
+        }
+        if (userModelFilter.getBirthOfDateAfter() != null){
+            predicates.add(criteriaBuilder.greaterThan(root.get("dateOfBirth"), userModelFilter.getBirthOfDateAfter()));
+        }
+        if (userModelFilter.getBirthOfDateBefore() != null){
+            predicates.add(criteriaBuilder.lessThan(root.get("dateOfBirth"), userModelFilter.getBirthOfDateBefore()));
         }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

@@ -18,8 +18,7 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long>, JpaSpecificationExecutor<UserEntity> {
 
-    @Query("SELECT u FROM UserEntity u WHERE u.isActive=true AND u.isDelete=false")
-    Page<UserEntity> findAllUsers(Specification<UserEntity> spec, Pageable pageable);
+    Page<UserEntity> findAll(Specification<UserEntity> spec, Pageable pageable);
 
     @Query("SELECT COUNT(u) FROM UserEntity u WHERE u.isDelete=false AND u.isActive=TRUE")
     Long countAllActiveUser();

@@ -13,7 +13,7 @@ public class UserModel {
 
     @Getter
     @Setter
-    public static class Create extends UserModel {
+    public static class Create {
 
         @NotBlank(message = "username is required")
         @Size(min = 2, max = 128, message = "username must be between 2 and 128")
@@ -64,7 +64,7 @@ public class UserModel {
         private String email;
         private String username;
         private String fullname;
-        private LocalDate birthOfDate;
+        private LocalDate dateOfBirth;
         private String gender;
         private Boolean isActive;
         private UserRoleEntity userRole;
@@ -72,12 +72,12 @@ public class UserModel {
 
     @Getter
     @Setter
-    public static class Search extends UserModel {
-        private Long id;
+    public static class Filter extends UserModel {
         private String email;
         private String username;
         private String fullname;
-        private LocalDate birthOfDate;
+        private LocalDate birthOfDateAfter;
+        private LocalDate birthOfDateBefore;
         private String gender;
         private Boolean isActive;
     }

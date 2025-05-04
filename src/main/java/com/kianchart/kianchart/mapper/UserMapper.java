@@ -10,7 +10,11 @@ import java.util.List;
 
 @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+
+        UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+//    static UserMapper INSTANCE() {
+//        return Mappers.getMapper(UserMapper.class);
+//    }
 
     UserModel.Response toUserModel(UserEntity userEntity);
 
