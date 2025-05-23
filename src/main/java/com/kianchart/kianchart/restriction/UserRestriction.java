@@ -2,14 +2,11 @@ package com.kianchart.kianchart.restriction;
 
 import com.kianchart.kianchart.entity.UserEntity;
 import com.kianchart.kianchart.model.UserModel;
-import com.kianchart.kianchart.utils.JPARestriction;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import org.hibernate.sql.Restriction;
-import org.hibernate.sql.RestrictionRenderingContext;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
